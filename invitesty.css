@@ -1,0 +1,29 @@
+body{
+	padding:5% 35% 0% 35%;
+	background-color: #FFD700;
+}
+.Invitation{
+	background-color: #FFC0CB;
+	text-align: center;
+	vertical-align: middle;
+	border: solid black 2px;
+	font-family: cursive;
+	font-style: italic;
+}
+.heading{
+	color: red;
+	font-size: 30px;
+	text-align:centre;
+}
+.header{
+	color: blue;
+	font-size: 20px;
+}
+.details{
+	color: purple;
+	font-size: 20px;
+}
+.footer{
+	color: orange;
+	font-size: 20px;
+}
