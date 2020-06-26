@@ -62,7 +62,7 @@
 		<input type="radio" name="veg" value="non">
 		<label>Non-Veg</label>
 		<br><br>
-		<label>No of people comming:</label>
+		<label>No of people coming:</label>
 		<input type="number" name="nop" min="0">
 		<br><br>
 		<input type="submit" name="submit" value="accept" id="acc" style="background-color: green; color: white">
