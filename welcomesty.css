@@ -1,0 +1,50 @@
+body{ 
+	font: 14px sans-serif; 
+	text-align: center; 
+	background-color: orange;
+	padding:0px;
+}
+.page-header{
+	position:absolute;
+	left:0px;
+	top:0px;
+	width:25%;
+	height:100%;
+	background-color: pink;
+	cursor: pointer;
+}
+.events{
+	position:absolute;
+	top:40px;
+	left: 30%;
+	display:none;
+}
+.invites{
+	position:absolute;
+	top:40px;
+	left: 30%;
+	display:none;
+}
+.scheduled{
+	position:absolute;
+	top:40px;
+	left: 30%;
+	display:none;
+}
+.notifications{
+	position:absolute;
+	top:40px;
+	left: 30%;
+	display:block;
+}
+button{
+	background-color:#87CEEB;
+	color: #FC0FC0;
+	font-size: 20px;
+	font-weight: bold;
+	border: solid green 2px;
+	cursor: pointer;
+}	
+a{
+	font-weight:lighter;
+}
