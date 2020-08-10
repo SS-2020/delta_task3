@@ -25,22 +25,25 @@ else{
 		$last_id = mysqli_insert_id($link);
 	
 		$user=array_keys($_POST['user']);
-		$N=count($user);
-        $uname="";    		
-		foreach($user as $var){
-			$sql = "SELECT username FROM users where id=?";
-			if($stmt = mysqli_prepare($link, $sql)){
-				mysqli_stmt_bind_param($stmt, "i", $param_id);
-				$param_id = $var;
-				$uname="";
-				if(mysqli_execute($stmt)){
-					mysqli_stmt_bind_result($stmt,$uname);
-					mysqli_stmt_fetch( $stmt );
+		if(!empty($_POST['user']))
+		{
+			$N=count($user);
+			$uname="";    		
+			foreach($user as $var){
+				$sql = "SELECT username FROM users where id=?";
+				if($stmt = mysqli_prepare($link, $sql)){
+					mysqli_stmt_bind_param($stmt, "i", $param_id);
+					$param_id = $var;
+					$uname="";
+					if(mysqli_execute($stmt)){
+						mysqli_stmt_bind_result($stmt,$uname);
+						mysqli_stmt_fetch( $stmt );
+					}
+					mysqli_stmt_close($stmt);
 				}
-			mysqli_stmt_close($stmt);
+				$ins="INSERT INTO invite(eno,userid,name) VALUES('$last_id','$var','$uname')";
+				mysqli_query($link,$ins);
 			}
-		$ins="INSERT INTO invite(eno,userid,name) VALUES('$last_id','$var','$uname')";
-		mysqli_query($link,$ins);
 		}
 	}
 	header("location: welcome.php");
