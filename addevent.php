@@ -17,7 +17,9 @@ else{
 	$date=$_POST['onDate'];
 	$time=$_POST['time'];
 	$footer=$_POST['footer'];
-	$reg=" INSERT INTO eventtable(uid,uname,type,header,venue,date,time,footer) VALUES('$uid','$uname','$type','$header','$venue','$date','$time','$footer')";
+	$ddate=$_POST['Ddate'];
+	$dtime=$_POST['Dtime'];
+	$reg=" INSERT INTO eventtable(uid,uname,type,header,venue,date,time,footer,deadlinedate,deadlinetime) VALUES('$uid','$uname','$type','$header','$venue','$date','$time','$footer','$ddate','$dtime')";
 	if(mysqli_query($link,$reg))
 	{
 		$last_id = mysqli_insert_id($link);
@@ -89,6 +91,12 @@ else{
 			<label>Footer:</label>
 			<input type="text" name="footer" class="form-control">
 		</div>
+		<div class="form-group">
+			<label>Deadline*:</label>
+			<input type="date" name="Ddate" placeholder="dd-mm-yyyy" value="" class="form-control">
+			<input type="time" name="Dtime" class="form-control" required>
+		</div>
+
 		<label>Invite </b></label>
 		<br>
 
