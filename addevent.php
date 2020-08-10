@@ -60,7 +60,7 @@ else{
 			<label ><b>Type*:</b></label>
 			<input type="radio" name="type" value="Birthday">Birthday
 			<input type="radio" name="type" value="Party">Party
-			<input type="radio" name="type" value="Marraige">Marraige
+			<input type="radio" name="type" value="Marriage">Marriage
 			<input type="radio" name="type" value="Funeral">Funeral	
 			<input type="radio" name="type" value="Other">Other			
 		</div>
