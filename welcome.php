@@ -7,7 +7,7 @@ if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
     header("location: login.php");
     exit;
 }
-	
+$uname=$_SESSION["username"];	
 ?>
  
 <!DOCTYPE html>
@@ -15,55 +15,54 @@ if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
 <head>
     <meta charset="UTF-8">
     <title>Welcome</title>
-    <style type="text/css">
-        body{ 
-		font: 14px sans-serif; 
-		text-align: center; 
-		background-color: orange;
-		}
-		.page-header{
-			position: absolute;
-			left:5%;
-		}
-		#logout{
-			position: absolute;
-			top:5%;
-			right:10%;
-			background-color: blue;
-			color: black;
-		}
-		button{
-			background-color: #87CEEB;
-			color: #FF0000;
-			border: solid green 2px;
-		}
-		.events{
-			position: absolute;
-			left:8%;
-			top:15%
-		}
-		.invites{
-			position: absolute;
-			left:30%;
-			top:15%;
-			}
-		.scheduled{
-			position: absolute;
-			left:60%;
-			top:15%;
-			}			
-    </style>
+	<link href="welcomesty.css" rel="stylesheet" type="text/css">
 </head>
 <body>
     <div class="page-header">
         <h1>Hi, <b><?php echo htmlspecialchars($_SESSION["username"]); ?> </b>! Welcome!</h1>
 		<h2>Dashboard</h2>
+		<h3 onclick="viewnot()">Notifications     -></h3>
+		<h3 onclick="vieweve()">Your Events       -></h3>
+		<h3 onclick="viewinv()">Event Invites     -></h3>
+		<h3 onclick="viewsch()">Scheduled Events  -></h3>
+        <a href="logout.php" id="logout" >Log Out</a>
 	</div>
-    <p >
-        <a href="logout.php" ><button id="logout">Log Out</button></a>
-    </p>
-	<div class='events'>
-		<h3>Your Events:</h3>
+
+	<div class="notifications">
+		<h2>NOTIFICATIONS:</h2><ul>
+		<span><?php
+			$param_id=$_SESSION['id'];
+			$query1="SELECT eno FROM invite WHERE userid='$param_id' AND notify=1";
+			$result1=mysqli_query($link,$query1);
+			while($eno=mysqli_fetch_assoc( $result1) ) {
+				$no=$eno['eno'];
+				$query2="SELECT uname FROM eventtable WHERE no='$no'";
+				$result2=mysqli_query($link,$query2);
+				while($ename=mysqli_fetch_assoc( $result2) ) {
+					$n=$ename['uname'];
+					echo"<li>$n has invited you</li>";?></span>
+					<a href='viewandrespond.php?no=<?php echo $no; ?>'>View and Respond</a>
+				<span><?php
+				}
+			}
+			$query3="SELECT no,type FROM eventtable WHERE uname='$uname'";
+			$result3=mysqli_query($link,$query3);
+			while($ans=mysqli_fetch_assoc($result3)) {
+				$event=$ans['type'];
+				$no=$ans['no'];
+				$query4="SELECT name FROM invite WHERE eno='$no' AND notify=2";
+				$result4=mysqli_query($link,$query4);
+				while($name=mysqli_fetch_assoc( $result4) ) {
+					$user=$name['name'];
+					echo "<p>$user has responded to your $event invite</p>";?></span>
+					<a href='viewresponse.php?no=<?php echo $no; ?>&user=<?php echo $user;?>' >View Invite Response</a>
+					<span><?php
+				}
+			}
+		?></span></ul>
+	</div>
+	<div class="events">
+		<h2>YOUR EVENTS:</h2>
 		<span><?php 
 			$sql = "SELECT no,type,date,time FROM eventtable where uid=?";
 			if($stmt = mysqli_prepare($link, $sql)){
@@ -79,9 +78,9 @@ if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
                 mysqli_stmt_bind_result($stmt,$no,$type,$on,$time);		
 
 					while(mysqli_stmt_fetch( $stmt ) ) {
-					echo " <p><button>Event: $type On:$on <br>Time:$time <br>";?></sapn>
+					echo " <button>Event: $type On:$on <br>Time:$time <br>";?></span>
 					<a href='viewresponse.php?no=<?php echo $no; ?>' >View Invite Response</a>
-				<span><?php echo" </button></p> ";
+				<span><?php echo" </button>";
 					}
 			}else{
                 echo "Oops! Something went wrong. Please try again later.";
@@ -91,8 +90,8 @@ if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
 		?></span>
 		<p><a href="addevent.php">Add event</a></p>
 	</div>
-	<div class='invites'>
-		<h3>Event Invites:</h3>
+	<div class="invites">
+		<h2>EVENT INVITES:</h2>
 		<span><?php 
 		$param_id = $_SESSION["id"];
 		$query="SELECT eno FROM invite where userid='$param_id' and status IS NULL";
@@ -108,9 +107,9 @@ if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
 							mysqli_stmt_bind_result($stmt2,$name,$type,$on,$time);		
 							
 							while(mysqli_stmt_fetch( $stmt2 ) ) {
-								echo " <p><button>From: $name<br> Event: $type On:$on <br>Time:$time <br> ";?></span>
+								echo " <button>From: $name<br> Event: $type On:$on <br>Time:$time <br> ";?></span>
 								<a href='viewandrespond.php?no=<?php echo $no; ?>'>View Invitation and Respond</a>
-								<span><?php echo" </button></p> ";
+								<span><?php echo" </button>";
 							}
 						}else{
 							echo "Oops! Something went wrong 2. Please try again later.";
@@ -122,10 +121,9 @@ if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
 		?>
 	</span>
 	</div>
-	<div class='scheduled'>
-		<h3>SCHEDULED EVENTS:</h3>
+	<div class="scheduled">
+		<h2>SCHEDULED EVENTS:</h2>
 		<span><?php 
-		$param_id = $_SESSION["id"];
 		$query="SELECT eno FROM invite where userid='$param_id' and status='accept' ";
 
 				$result= mysqli_query($link,$query);
@@ -139,9 +137,9 @@ if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
 							mysqli_stmt_bind_result($stmt2,$name,$type,$on,$time);		
 							
 							while(mysqli_stmt_fetch( $stmt2 ) ) {
-								echo " <p><button>From: $name<br> Event: $type On:$on <br>Time:$time <br>";?></span>
+								echo " <button>From: $name<br> Event: $type On:$on <br>Time:$time <br>";?></span>
 								<a href='viewinvite.php?no=<?php echo $no; ?>'>View Invitation</a>
-								<span><?php echo" </button></p> ";
+								<span><?php echo" </button>";
 							}
 						}else{
 							echo "Oops! Something went wrong 2. Please try again later.";
@@ -154,5 +152,31 @@ if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
 		?>
 		</span>
 	</div>
+	<script>
+		function viewnot(){
+			document.querySelector(".notifications").style.display="block";
+			document.querySelector(".events").style.display="none";
+			document.querySelector(".invites").style.display="none";
+			document.querySelector(".scheduled").style.display="none";
+		}
+		function vieweve(){
+			document.querySelector(".notifications").style.display="none";
+			document.querySelector(".events").style.display="block";
+			document.querySelector(".invites").style.display="none";
+			document.querySelector(".scheduled").style.display="none";
+		}
+		function viewinv(){
+			document.querySelector(".notifications").style.display="none";
+			document.querySelector(".events").style.display="none";
+			document.querySelector(".invites").style.display="block";
+			document.querySelector(".scheduled").style.display="none";
+		}
+		function viewsch(){
+			document.querySelector(".notifications").style.display="none";
+			document.querySelector(".events").style.display="none";
+			document.querySelector(".invites").style.display="none";
+			document.querySelector(".scheduled").style.display="block";
+		}
+	</script>
 </body>
 </html>
